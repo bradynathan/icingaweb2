@@ -84,7 +84,10 @@ class JavaScript
         }
         $files = array_merge($vendorFiles, $jsFiles);
 
-        if ($etag = FileCache::etagMatchesFiles($files)) {
+        if (
+            $etag = FileCache::etagMatchesFiles($files) &&
+            $_SERVER['HTTP_CACHE_CONTROL'] !== 'no-cache'
+        ) {
             header("HTTP/1.1 304 Not Modified");
             return;
         } else {
